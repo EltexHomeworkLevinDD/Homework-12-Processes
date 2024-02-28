@@ -26,27 +26,3 @@ int main(){
 
     return 0;
 }
-
-// int main(){
-//     pid_t c1pid, c2pid;
-//     int s1, s2;
-//     printf("Parent pid = %d\n", getpid());
-
-//     c1pid = fork();
-//     if (c1pid == 0){ // Child 1
-//         printf("\tChild 1 pid = %6d ppid = %d\n", getpid(), getppid());
-//         exit(1);
-//     }
-//     else { // Parent
-//         c2pid = fork();
-//         if (c2pid == 0){ // Child 2
-//             printf("\tChild 2 pid = %6d ppid = %d\n", getpid(), getppid());
-//             exit(2);
-//         }
-//     }
-
-//     wait(&s1);
-//     wait(&s2);
-
-//     return 0;
-// }
