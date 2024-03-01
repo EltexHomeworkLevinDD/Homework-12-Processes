@@ -1,7 +1,21 @@
 CC := gcc
-main: main.c
+CFLAGS := -Wall -Wextra -Werror
 
-.PHONY : clean
+SRCDIR := ./utils/src
+BINDIR := ./utils/bin
+
+SRCS := $(wildcard $(SRCDIR)/*.c)
+EXES := $(patsubst $(SRCDIR)/%.c,$(BINDIR)/%,$(SRCS))
+
+.PHONY: all clean
+
+all: $(EXES)
+
+$(BINDIR)/%: $(SRCDIR)/%.c | $(BINDIR)
+    $(CC) $(CFLAGS) -o $@ $<
+
+$(BINDIR):
+    mkdir -p $@
 
 clean:
-	rm -rf *.o main -lpthread
+    rm -rf $(BINDIR)

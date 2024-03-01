@@ -7,13 +7,29 @@
 программы. Выход из интерпретатора по команде exit. 
 */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include <pthread.h>
+
+#include "cmd_process.h"
+
+#define MAX_CMD_LEN 1024
+#define CMD_EXIT "exit"
 
 int main(){
 
+    char input[MAX_CMD_LEN]; 
+    printf("Введите команду: ");
+    fgets(input, sizeof(input), stdin);
+    input[strlen(input)-1] = '\0';
+
+    CommandInfo cmd_info = parse_command(input);
+    if (exec_command(&cmd_info) == 0){
+        perror("Binary file not found!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Sucsess!\n");
     //  showdir [keys] [args]
     //      
     //      -s alpha/version --sort-alpha --sort-version
