@@ -19,25 +19,25 @@
 int main(){
 
     char input[MAX_CMD_LEN]; 
-    printf("Введите команду: ");
-    fgets(input, sizeof(input), stdin);
-    input[strlen(input)-1] = '\0';
+    CommandInfo cmd_info;
 
-    CommandInfo cmd_info = parse_command(input);
-    if (exec_command(&cmd_info) == 0){
-        perror("Binary file not found!\n");
-        exit(EXIT_FAILURE);
+    int flag = 1;
+    while (flag == 1){
+        printf("kekw_interpretator >: ");
+        fgets(input, sizeof(input), stdin);
+        input[strlen(input)-1] = '\0';
+
+        if (strcmp(input, "exit") == 0){
+            flag = 0;
+            break;
+        }
+
+        cmd_info = parse_command(input);
+        if (exec_command(&cmd_info) == 0){
+            perror("Binary file not found!\n");
+            exit(EXIT_FAILURE);
+        }
     }
-
-    printf("Sucsess!\n");
-    //  showdir [keys] [args]
-    //      
-    //      -s alpha/version --sort-alpha --sort-version
-    //      -c number_of_entries
-
-    //  tog [keys] [args]
-    //      -c "message" --> txt file create
-    //      -s show_file --> txt_file show
     
     return 0;
 }

@@ -1,15 +1,17 @@
 CC := gcc
 CFLAGS := -g
 
-# ---------------------- Patterns
+MAIN_DIR := interpretator
+MAIN_SRC_DIR := $(MAIN_DIR)/src
+MAIN_OBJ_DIR := $(MAIN_DIR)/obj
+MAIN_BIN_DIR := $(MAIN_DIR)/bin
+MAIN := interpretator
+
 UTIL_DIR := utils
 UTIL_SRC_DIR := $(UTIL_DIR)/src
 UTIL_OBJ_DIR := $(UTIL_DIR)/obj
 UTIL_BIN_DIR := $(UTIL_DIR)/bin
 
-# ---------- Шаблон компиляции утилиты
-
-#---------------------------------------------------------------------------------
 UTILS := showdir tog
 
 UTIL := showdir
@@ -36,22 +38,30 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(BIN_FILE): $(OBJ_FILES)
 	$(CC) $(CFLAGS) $^ -o $@
 
-.PHONY: utils_all
+.PHONY: utils_all interpretator_all
 
 utils_all: $(foreach util,$(UTILS),$(UTIL_BIN_DIR)/$(util))
 
-MAIN_SRC_FILES := main.c cmd_process.c
-MAIN_OBJ_FILES := $(patsubst %.c,%.o,$(MAIN_SRC_FILES))
-MAIN_BIN := main
+SRC_DIR := $(MAIN_SRC_DIR)
+OBJ_DIR := $(MAIN_OBJ_DIR)
+BIN_DIR := $(MAIN_BIN_DIR)
+SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
+BIN_FILE := $(BIN_DIR)/$(MAIN)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+$(BIN_FILE): $(OBJ_FILES)
+	$(CC) $(CFLAGS) $^ -o $@
 
-main_all: $(MAIN_OBJ_FILES)
-	$(CC) $(CFLAGS) $(MAIN_OBJ_FILES) -o $(MAIN_BIN)
-%.o: %.c
-	$(CC) $(CFLAGS) $^ -c -o $@	
+interpretator_all: $(BIN_FILE)
 
 clean_all:
 	rm -rf $(UTIL_OBJ_DIR)/*.o
 	rm -rf $(UTIL_BIN_DIR)/*
+	rm -rf $(MAIN_OBJ_DIR)/*.o
+	rm -rf $(MAIN_BIN_DIR)/*
+
+all: interpretator_all utils_all
 #---------------------------------------------------------------------------------
 
 # $(MAKE) - рекурсивный вызов make с переданными параметрами

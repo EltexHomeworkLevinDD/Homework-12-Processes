@@ -62,12 +62,6 @@ int exec_command(CommandInfo* cmd_info){
     }
     free(utils); utils = NULL;
 
-    // 
-    if (!util_found){
-        //printf("The '%s' command was not found\n", (*cmd_info).util);
-        return 0;
-    }
-
     // Создаем массив аргументов для передачи в новый процесс
     char *args[MAX_ARGS * 2 + cmd_info->num_args + 1];
     // *2 -- Каждый ключ может иметь свое значение, учитаваем
@@ -83,7 +77,6 @@ int exec_command(CommandInfo* cmd_info){
         }
     }
 
-    // Добавляем ключи и их значения
     // Добавляем аргументы
     for (int i = 0; i < cmd_info->num_args; i++) {
         args[arg_index++] = cmd_info->args[i];

@@ -1,4 +1,5 @@
-
 utils/bin/*
 utils/obj/*/*
 
+interpretator/bin/*
+interpretator/obj/*
