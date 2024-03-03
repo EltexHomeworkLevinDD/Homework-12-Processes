@@ -94,7 +94,7 @@ int exec_command(CommandInfo* cmd_info){
     // PATH_MAX + '/' + UTIL_BINARY_DIR + '/' + util_name
     // PATH_MAX includes NULL
     char full_util_pathname[PATH_MAX + strlen(UTIL_BINARY_DIR) + MAX_UTIL_LEN + 2];
-    if (getcwd(full_util_pathname, sizeof(PATH_MAX)) == NULL) {
+    if (getcwd(full_util_pathname, PATH_MAX) == NULL) {
         perror("getcwd to full_util_pathname PATH_MAX size bytes");
         exit(EXIT_FAILURE);
     }
@@ -120,7 +120,7 @@ int exec_command(CommandInfo* cmd_info){
         exit(EXIT_FAILURE);
         break;
     default:
-        waitpid(cpid, &cstatus, NULL);
+        waitpid(cpid, &cstatus, 0);
         return 1;
         break;
     }
