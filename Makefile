@@ -14,6 +14,13 @@ UTIL_BIN_DIR := $(UTIL_DIR)/bin
 
 UTILS := showdir tog
 
+.PHONY: create_main_dirs create_utils_dirs
+create_main_dirs:
+	mkdir -p $(MAIN_DIR) $(MAIN_SRC_DIR) $(MAIN_OBJ_DIR) $(MAIN_BIN_DIR)
+create_utils_dirs:
+	mkdir -p $(UTIL_DIR) $(UTIL_SRC_DIR) $(UTIL_OBJ_DIR) $(UTIL_BIN_DIR) $(foreach util,$(UTILS),$(UTIL_OBJ_DIR)/$(util))
+
+
 UTIL := showdir
 SRC_DIR := $(UTIL_SRC_DIR)/$(UTIL)
 OBJ_DIR := $(UTIL_OBJ_DIR)/$(UTIL)
@@ -21,9 +28,9 @@ BIN_DIR := $(UTIL_BIN_DIR)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_FILE := $(BIN_DIR)/$(UTIL)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | create_utils_dirs
 	$(CC) $(CFLAGS) -c $^ -o $@
-$(BIN_FILE): $(OBJ_FILES)
+$(BIN_FILE): $(OBJ_FILES) | create_utils_dirs
 	$(CC) $(CFLAGS) $^ -o $@
 
 UTIL := tog
@@ -33,9 +40,9 @@ BIN_DIR := $(UTIL_BIN_DIR)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_FILE := $(BIN_DIR)/$(UTIL)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | create_utils_dirs
 	$(CC) $(CFLAGS) -c $^ -o $@
-$(BIN_FILE): $(OBJ_FILES)
+$(BIN_FILE): $(OBJ_FILES) | create_utils_dirs
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: utils_all interpretator_all
@@ -48,7 +55,7 @@ BIN_DIR := $(MAIN_BIN_DIR)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 BIN_FILE := $(BIN_DIR)/$(MAIN)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | create_main_dirs
 	$(CC) $(CFLAGS) -c $^ -o $@
 $(BIN_FILE): $(OBJ_FILES)
 	$(CC) $(CFLAGS) $^ -o $@
@@ -90,6 +97,8 @@ all: interpretator_all utils_all
 # ** - рекурсивно
 # $(foreach var,list,text)
 # $(addsuffix что, куда) - добавить в конец строки
+# | - перед выполнением правила необходимо выполнить другие зависимости, но только один раз, 
+# если они еще не выполнены
 
 # print_util_objs:
 # 	@echo "kekw: $(variable)"
